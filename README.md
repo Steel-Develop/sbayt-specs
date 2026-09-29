@@ -27,7 +27,8 @@ https://raw.githubusercontent.com/Steel-Develop/sbayt-specs/<contract-id>-v<vers
 https://raw.githubusercontent.com/Steel-Develop/sbayt-specs/<contract-id>-v<version>/<namespace>/schema.json
 ```
 
-Published tags are retained indefinitely. They must never be moved,
+Merging a validated publication pull request creates its immutable tag
+automatically. Published tags are retained indefinitely and must never be moved,
 overwritten, or deleted.
 
 ## Validation

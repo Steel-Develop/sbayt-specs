@@ -7,8 +7,9 @@
 # ]
 # ///
 
-"""Validate the structure and immutable artifacts of the contract registry."""
+"""Validate the registry and publish missing immutable tags after merge."""
 
+import argparse
 import json
 import os
 import re
@@ -57,6 +58,17 @@ def rewrite_refs(value: Any) -> Any:
     if isinstance(value, list):
         return [rewrite_refs(item) for item in value]
     return value
+
+
+def tag_exists(tag: str) -> bool:
+    tag_ref = f"refs/tags/{tag}"
+    status = subprocess.run(
+        ["git", "rev-parse", "--verify", "--quiet", tag_ref],
+        check=False,
+        capture_output=True,
+    ).returncode
+    require(status in {0, 1}, f"TAG_LOOKUP_FAILED tag={tag}")
+    return status == 0
 
 
 def validate_contract(directory: Path, existing_tags: set[str]) -> str:
@@ -130,16 +142,9 @@ def validate_contract(directory: Path, existing_tags: set[str]) -> str:
         f"DERIVED_SCHEMA_MISMATCH namespace={namespace}",
     )
 
-    tag_ref = f"refs/tags/{tag}"
-    tag_status = subprocess.run(
-        ["git", "rev-parse", "--verify", "--quiet", tag_ref],
-        check=False,
-        capture_output=True,
-    ).returncode
-    require(tag_status in {0, 1}, f"TAG_LOOKUP_FAILED tag={tag}")
-    if tag_status == 0:
+    if tag_exists(tag):
         comparison = subprocess.run(
-            ["git", "diff", "--quiet", tag_ref, "--", namespace],
+            ["git", "diff", "--quiet", f"refs/tags/{tag}", "--", namespace],
             check=False,
         ).returncode
         require(comparison == 0, f"IMMUTABLE_TAG_CONFLICT tag={tag}")
@@ -147,8 +152,7 @@ def validate_contract(directory: Path, existing_tags: set[str]) -> str:
     return tag
 
 
-def main() -> None:
-    root = Path.cwd()
+def validate_registry(root: Path) -> set[str]:
     artifact_paths = {
         path
         for artifact_name in ARTIFACT_NAMES
@@ -180,6 +184,46 @@ def main() -> None:
         )
 
     print(f"Validated {len(contract_tags)} contract(s).")
+    return contract_tags
+
+
+def publish_missing_tags(contract_tags: set[str]) -> None:
+    require(
+        os.environ.get("GITHUB_ACTIONS") == "true"
+        and os.environ.get("GITHUB_REF") == "refs/heads/master",
+        "TAG_PUBLICATION_REQUIRES_MASTER",
+    )
+    missing_tags = [tag for tag in sorted(contract_tags) if not tag_exists(tag)]
+    if not missing_tags:
+        print("No contract tags need publication.")
+        return
+
+    subprocess.run(["git", "config", "user.name", "github-actions[bot]"], check=True)
+    subprocess.run(
+        [
+            "git",
+            "config",
+            "user.email",
+            "41898282+github-actions[bot]@users.noreply.github.com",
+        ],
+        check=True,
+    )
+    for tag in missing_tags:
+        subprocess.run(
+            ["git", "tag", "--annotate", tag, "--message", f"Publish {tag}"],
+            check=True,
+        )
+        subprocess.run(["git", "push", "origin", f"refs/tags/{tag}"], check=True)
+        print(f"Published {tag}.")
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--publish-tags", action="store_true")
+    arguments = parser.parse_args()
+    contract_tags = validate_registry(Path.cwd())
+    if arguments.publish_tags:
+        publish_missing_tags(contract_tags)
 
 
 if __name__ == "__main__":
