@@ -1,0 +1,270 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/Steel-Develop/sbayt-specs/core-models-v0.1.0/core/schema.json",
+  "title": "Sbayt Core Models",
+  "$defs": {
+    "AuditableDTO": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Audit metadata shared by public DTOs.",
+      "properties": {
+        "created_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "created_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "updated_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "updated_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "deleted": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": false
+        },
+        "deleted_at": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "deleted_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      }
+    },
+    "LabelDTO": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Key-value label attached to a public resource.",
+      "required": [
+        "key",
+        "value"
+      ],
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "UnitDTO": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Unit metadata transported by public DTOs.",
+      "required": [
+        "symbol"
+      ],
+      "properties": {
+        "symbol": {
+          "type": "string"
+        },
+        "system": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UnitSystem"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "quantity_kind": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/QuantityKind"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "display_symbol": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "unece_common_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      }
+    },
+    "ValueRangeDTO": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Numeric or temporal range whose bounds retain the permissive Any wire type.",
+      "properties": {
+        "min": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Hard lower bound."
+        },
+        "max": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Hard upper bound."
+        },
+        "soft_min": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Soft lower bound."
+        },
+        "soft_max": {
+          "anyOf": [
+            {},
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Soft upper bound."
+        },
+        "inclusive": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether comparisons include the boundaries."
+        }
+      }
+    },
+    "QuantityKind": {
+      "type": "string",
+      "description": "Physical quantity kinds aligned with the QUDT vocabulary.",
+      "enum": [
+        "temperature",
+        "celsius_temperature",
+        "pressure",
+        "length",
+        "mass",
+        "velocity",
+        "angular_velocity",
+        "rotational_frequency",
+        "power",
+        "energy",
+        "volume",
+        "electric_current",
+        "voltage",
+        "resistance",
+        "frequency",
+        "byte_data_volume",
+        "dimensionless",
+        "time_duration",
+        "plane_angle",
+        "volumetric_flow_rate",
+        "mass_flow_rate",
+        "force",
+        "torque",
+        "linear_acceleration",
+        "apparent_power",
+        "reactive_power",
+        "relative_humidity",
+        "mass_density",
+        "mass_concentration",
+        "electric_conductivity",
+        "dynamic_viscosity",
+        "kinematic_viscosity",
+        "irradiance",
+        "illuminance",
+        "sound_pressure_level",
+        "ph",
+        "turbidity"
+      ]
+    },
+    "UnitSystem": {
+      "type": "string",
+      "description": "Known unit systems.",
+      "enum": [
+        "UCUM",
+        "IEC",
+        "CUSTOM"
+      ]
+    }
+  },
+  "description": "Public wire contracts shared by Sbayt services."
+}
