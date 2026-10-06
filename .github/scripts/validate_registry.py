@@ -7,9 +7,8 @@
 # ]
 # ///
 
-"""Validate the registry and publish missing immutable tags after merge."""
+"""Validate the registry and its immutable published contract tags."""
 
-import argparse
 import json
 import os
 import re
@@ -187,43 +186,8 @@ def validate_registry(root: Path) -> set[str]:
     return contract_tags
 
 
-def publish_missing_tags(contract_tags: set[str]) -> None:
-    require(
-        os.environ.get("GITHUB_ACTIONS") == "true"
-        and os.environ.get("GITHUB_REF") == "refs/heads/master",
-        "TAG_PUBLICATION_REQUIRES_MASTER",
-    )
-    missing_tags = [tag for tag in sorted(contract_tags) if not tag_exists(tag)]
-    if not missing_tags:
-        print("No contract tags need publication.")
-        return
-
-    subprocess.run(["git", "config", "user.name", "github-actions[bot]"], check=True)
-    subprocess.run(
-        [
-            "git",
-            "config",
-            "user.email",
-            "41898282+github-actions[bot]@users.noreply.github.com",
-        ],
-        check=True,
-    )
-    for tag in missing_tags:
-        subprocess.run(
-            ["git", "tag", "--annotate", tag, "--message", f"Publish {tag}"],
-            check=True,
-        )
-        subprocess.run(["git", "push", "origin", f"refs/tags/{tag}"], check=True)
-        print(f"Published {tag}.")
-
-
 def main() -> None:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--publish-tags", action="store_true")
-    arguments = parser.parse_args()
-    contract_tags = validate_registry(Path.cwd())
-    if arguments.publish_tags:
-        publish_missing_tags(contract_tags)
+    validate_registry(Path.cwd())
 
 
 if __name__ == "__main__":

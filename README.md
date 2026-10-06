@@ -27,8 +27,9 @@ https://raw.githubusercontent.com/Steel-Develop/sbayt-specs/<contract-id>-v<vers
 https://raw.githubusercontent.com/Steel-Develop/sbayt-specs/<contract-id>-v<version>/<namespace>/schema.json
 ```
 
-Merging a validated publication pull request creates its immutable tag
-automatically. Published tags are retained indefinitely and must never be moved,
+Owner publication flows validate and publish the generated artifacts and their
+annotated tag together. An existing tag is reused only when the artifacts match
+exactly. Published tags are retained indefinitely and must never be moved,
 overwritten, or deleted.
 
 ## Validation
