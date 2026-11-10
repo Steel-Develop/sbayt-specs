@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/Steel-Develop/sbayt-specs/core-models-v0.1.0/core/schema.json",
+  "$id": "https://raw.githubusercontent.com/Steel-Develop/sbayt-specs/core-models-v0.2.0/core/schema.json",
   "title": "Sbayt Core Models",
   "$defs": {
     "AuditableDTO": {
@@ -264,6 +264,822 @@
         "IEC",
         "CUSTOM"
       ]
+    },
+    "DataFrameDTO": {
+      "additionalProperties": false,
+      "description": "DTO for DataFrame.",
+      "properties": {
+        "data": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DataFrameDataDTO"
+            },
+            {
+              "$ref": "#/$defs/DataFrameDataCSRDTO"
+            }
+          ],
+          "title": "Data"
+        },
+        "encoding": {
+          "$ref": "#/$defs/DataFrameEncoding",
+          "default": "row"
+        },
+        "meta": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DataFrameMetaDTO"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "schema": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DataFrameSchemaDTO"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "data"
+      ],
+      "title": "DataFrameDTO",
+      "type": "object"
+    },
+    "DataFrameDataCSRDTO": {
+      "additionalProperties": false,
+      "description": "DTO for DataFrameDataCSR.",
+      "properties": {
+        "columns": {
+          "additionalProperties": {
+            "items": {},
+            "type": "array"
+          },
+          "title": "Columns",
+          "type": "object"
+        },
+        "segments": {
+          "$ref": "#/$defs/DataFrameSegmentsDTO"
+        },
+        "series": {
+          "$ref": "#/$defs/DataFrameSeriesDTO"
+        }
+      },
+      "required": [
+        "segments",
+        "series"
+      ],
+      "title": "DataFrameDataCSRDTO",
+      "type": "object"
+    },
+    "DataFrameDataDTO": {
+      "additionalProperties": false,
+      "description": "DTO for DataFrameData.",
+      "properties": {
+        "values": {
+          "items": {
+            "items": {},
+            "type": "array"
+          },
+          "title": "Values",
+          "type": "array"
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "title": "DataFrameDataDTO",
+      "type": "object"
+    },
+    "DataFrameEncoding": {
+      "description": "Logical payload encoding for DataFrame.data.",
+      "enum": [
+        "row",
+        "columnar+csr"
+      ],
+      "title": "DataFrameEncoding",
+      "type": "string"
+    },
+    "DataFrameFieldConfigDTO": {
+      "additionalProperties": false,
+      "description": "DTO for DataFrameFieldConfig.",
+      "properties": {
+        "date_format": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Date Format"
+        },
+        "decimals": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Decimals"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "display_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Display Name"
+        },
+        "interval": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Interval"
+        },
+        "max": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max"
+        },
+        "min": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Min"
+        },
+        "soft_max": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Soft Max"
+        },
+        "soft_min": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Soft Min"
+        },
+        "time_encoding": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TimeEncoding"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "timezone": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Timezone"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/UnitDTO"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "DataFrameFieldConfigDTO",
+      "type": "object"
+    },
+    "DataFrameFieldDTO": {
+      "additionalProperties": false,
+      "description": "DTO for DataFrameField.",
+      "properties": {
+        "config": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/DataFrameFieldConfigDTO"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "labels": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/LabelDTO"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Labels"
+        },
+        "measurement_scale": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MeasurementScale"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "metadata": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MetadataDTO"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "ordered_categories": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ordered Categories"
+        },
+        "type": {
+          "$ref": "#/$defs/DataType"
+        }
+      },
+      "required": [
+        "name",
+        "type"
+      ],
+      "title": "DataFrameFieldDTO",
+      "type": "object"
+    },
+    "DataFrameIndexSpecDTO": {
+      "additionalProperties": false,
+      "description": "DTO for DataFrameIndexSpec.",
+      "properties": {
+        "fields": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Fields",
+          "type": "array"
+        },
+        "kind": {
+          "default": "secondary",
+          "enum": [
+            "primary",
+            "secondary"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "order": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "enum": [
+                  "asc",
+                  "desc"
+                ],
+                "type": "string"
+              },
+              "type": "object"
+            },
+            {
+              "items": {
+                "maxItems": 2,
+                "minItems": 2,
+                "prefixItems": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "enum": [
+                      "asc",
+                      "desc"
+                    ],
+                    "type": "string"
+                  }
+                ],
+                "type": "array"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Order"
+        },
+        "sparse": {
+          "default": false,
+          "title": "Sparse",
+          "type": "boolean"
+        },
+        "unique": {
+          "default": false,
+          "title": "Unique",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "fields"
+      ],
+      "title": "DataFrameIndexSpecDTO",
+      "type": "object"
+    },
+    "DataFrameMetaDTO": {
+      "additionalProperties": false,
+      "description": "DTO for DataFrameMeta.",
+      "properties": {
+        "custom": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Custom"
+        },
+        "dimensions": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Dimensions"
+        },
+        "hints": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Hints"
+        },
+        "result_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ResultTypeEnum"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "series_keys": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Series Keys"
+        }
+      },
+      "title": "DataFrameMetaDTO",
+      "type": "object"
+    },
+    "DataFrameSchemaDTO": {
+      "additionalProperties": false,
+      "description": "DTO for DataFrameSchema.",
+      "properties": {
+        "fields": {
+          "items": {
+            "$ref": "#/$defs/DataFrameFieldDTO"
+          },
+          "title": "Fields",
+          "type": "array"
+        },
+        "indexes": {
+          "items": {
+            "$ref": "#/$defs/DataFrameIndexSpecDTO"
+          },
+          "title": "Indexes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "fields"
+      ],
+      "title": "DataFrameSchemaDTO",
+      "type": "object"
+    },
+    "DataFrameSegmentsDTO": {
+      "additionalProperties": false,
+      "description": "DTO for DataFrameSegments.",
+      "properties": {
+        "keys": {
+          "additionalProperties": {
+            "items": {},
+            "type": "array"
+          },
+          "title": "Keys",
+          "type": "object"
+        },
+        "metadata": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Metadata"
+        }
+      },
+      "required": [
+        "keys"
+      ],
+      "title": "DataFrameSegmentsDTO",
+      "type": "object"
+    },
+    "DataFrameSeriesDTO": {
+      "additionalProperties": false,
+      "description": "DTO for DataFrameSeries.",
+      "properties": {
+        "indices": {
+          "additionalProperties": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          },
+          "title": "Indices",
+          "type": "object"
+        },
+        "row_ptr": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Row Ptr",
+          "type": "array"
+        }
+      },
+      "title": "DataFrameSeriesDTO",
+      "type": "object"
+    },
+    "DataType": {
+      "description": "Logical data types for DataFrame fields.",
+      "enum": [
+        "STRING",
+        "INT",
+        "LONG",
+        "FLOAT",
+        "DOUBLE",
+        "BIG_DECIMAL",
+        "BOOLEAN",
+        "BYTES",
+        "DATE",
+        "TIME",
+        "DATETIME",
+        "DURATION",
+        "UUID",
+        "JSON",
+        "ARRAY",
+        "ANY",
+        "UNKNOWN",
+        "INFERRED"
+      ],
+      "title": "DataType",
+      "type": "string"
+    },
+    "FieldValidationErrorDTO": {
+      "additionalProperties": false,
+      "description": "Validation error associated with a field.",
+      "properties": {
+        "field": {
+          "title": "Field",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "message_key": {
+          "title": "Message Key",
+          "type": "string"
+        },
+        "params": {
+          "additionalProperties": true,
+          "title": "Params",
+          "type": "object"
+        }
+      },
+      "required": [
+        "field",
+        "message",
+        "message_key"
+      ],
+      "title": "FieldValidationErrorDTO",
+      "type": "object"
+    },
+    "MeasurementScale": {
+      "description": "Statistical measurement scale for a field.",
+      "enum": [
+        "NOMINAL",
+        "ORDINAL",
+        "INTERVAL",
+        "RATIO"
+      ],
+      "title": "MeasurementScale",
+      "type": "string"
+    },
+    "MetadataDTO": {
+      "additionalProperties": false,
+      "description": "DTO for Metadata model with string-only values.",
+      "properties": {
+        "data": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "String key-value metadata entries",
+          "title": "Data",
+          "type": "object"
+        }
+      },
+      "title": "MetadataDTO",
+      "type": "object"
+    },
+    "ObjectValidationErrorDTO": {
+      "additionalProperties": false,
+      "description": "Validation error associated with an object.",
+      "properties": {
+        "fallback_message": {
+          "title": "Fallback Message",
+          "type": "string"
+        },
+        "message_key": {
+          "title": "Message Key",
+          "type": "string"
+        },
+        "params": {
+          "additionalProperties": true,
+          "title": "Params",
+          "type": "object"
+        }
+      },
+      "required": [
+        "message_key",
+        "fallback_message"
+      ],
+      "title": "ObjectValidationErrorDTO",
+      "type": "object"
+    },
+    "ResultTypeEnum": {
+      "enum": [
+        "matrix",
+        "vector",
+        "scalar"
+      ],
+      "title": "ResultTypeEnum",
+      "type": "string"
+    },
+    "SamplingMode": {
+      "description": "Defines how a signal is sampled.",
+      "enum": [
+        "EVENT",
+        "PERIODIC",
+        "VARIABLE"
+      ],
+      "title": "SamplingMode",
+      "type": "string"
+    },
+    "SamplingSpecDTO": {
+      "additionalProperties": false,
+      "description": "Expected sampling behavior for a signal.",
+      "properties": {
+        "expected_rate_hz": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Expected sampling rate in hertz.",
+          "title": "Expected Rate Hz"
+        },
+        "interval_ms": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Expected sampling interval in milliseconds.",
+          "title": "Interval Ms"
+        },
+        "max_gap_ms": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Maximum gap between samples in milliseconds.",
+          "title": "Max Gap Ms"
+        },
+        "mode": {
+          "$ref": "#/$defs/SamplingMode",
+          "default": "PERIODIC",
+          "description": "Sampling mode."
+        },
+        "tolerance_ms": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Allowed interval deviation in milliseconds.",
+          "title": "Tolerance Ms"
+        }
+      },
+      "title": "SamplingSpecDTO",
+      "type": "object"
+    },
+    "TimeEncoding": {
+      "description": "Epoch timestamp resolution for DataFrame fields.",
+      "enum": [
+        "EPOCH_NS",
+        "EPOCH_US",
+        "EPOCH_MS",
+        "EPOCH_S"
+      ],
+      "title": "TimeEncoding",
+      "type": "string"
+    },
+    "ValidationErrorsDTO": {
+      "additionalProperties": false,
+      "description": "Serializable DTO for collected validation errors.",
+      "properties": {
+        "field_errors": {
+          "items": {
+            "$ref": "#/$defs/FieldValidationErrorDTO"
+          },
+          "title": "Field Errors",
+          "type": "array"
+        },
+        "object_errors": {
+          "items": {
+            "$ref": "#/$defs/ObjectValidationErrorDTO"
+          },
+          "title": "Object Errors",
+          "type": "array"
+        }
+      },
+      "title": "ValidationErrorsDTO",
+      "type": "object"
     }
   },
   "description": "Public wire contracts shared by Sbayt services."
