@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Sbayt Core Models
-  version: 0.2.0
+  version: 0.3.0
   description: Public wire contracts shared by Sbayt services.
 paths: {}
 components:
@@ -545,6 +545,41 @@ components:
       - INFERRED
       title: DataType
       type: string
+    ErrorDetails:
+      type: object
+      description: Error details exposed by shared Problem Details responses.
+      required:
+        - message
+      properties:
+        message:
+          type: string
+        traceback:
+          anyOf:
+            - type: string
+            - type: "null"
+          default: null
+        exception_type:
+          anyOf:
+            - type: string
+            - type: "null"
+          default: null
+        code:
+          anyOf:
+            - type: string
+            - type: "null"
+          default: null
+        origin:
+          anyOf:
+            - type: string
+              enum: [SYSTEM, USER, EXTERNAL]
+            - type: "null"
+          default: SYSTEM
+        cause:
+          anyOf:
+            - type: string
+            - type: "null"
+          default: null
+
     FieldValidationErrorDTO:
       additionalProperties: false
       description: Validation error associated with a field.

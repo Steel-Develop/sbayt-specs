@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/Steel-Develop/sbayt-specs/core-models-v0.2.0/core/schema.json",
+  "$id": "https://raw.githubusercontent.com/Steel-Develop/sbayt-specs/core-models-v0.3.0/core/schema.json",
   "title": "Sbayt Core Models",
   "$defs": {
     "AuditableDTO": {
@@ -877,6 +877,78 @@
       ],
       "title": "DataType",
       "type": "string"
+    },
+    "ErrorDetails": {
+      "type": "object",
+      "description": "Error details exposed by shared Problem Details responses.",
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "traceback": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "exception_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "origin": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "SYSTEM",
+                "USER",
+                "EXTERNAL"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": "SYSTEM"
+        },
+        "cause": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      }
     },
     "FieldValidationErrorDTO": {
       "additionalProperties": false,
