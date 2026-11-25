@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Sbayt Core Models
-  version: 0.3.0
+  version: 0.4.0
   description: Public wire contracts shared by Sbayt services.
 paths: {}
 components:
@@ -47,18 +47,125 @@ components:
             - type: "null"
           default: null
 
-    LabelDTO:
+    TimestampedDTO:
       type: object
       additionalProperties: false
-      description: Key-value label attached to a public resource.
-      required:
-        - key
-        - value
+      description: DTO fields for creation and update audit metadata.
       properties:
-        key:
-          type: string
-        value:
-          type: string
+        created_at:
+          anyOf:
+            - type: string
+            - type: "null"
+          default: null
+        created_by:
+          anyOf:
+            - type: string
+            - type: "null"
+          default: null
+        updated_at:
+          anyOf:
+            - type: string
+            - type: "null"
+          default: null
+        updated_by:
+          anyOf:
+            - type: string
+            - type: "null"
+          default: null
+
+    SoftDeletableDTO:
+      type: object
+      additionalProperties: false
+      description: DTO fields for logical deletion metadata.
+      properties:
+        deleted:
+          anyOf:
+            - type: boolean
+            - type: "null"
+          default: false
+        deleted_at:
+          anyOf:
+            - type: string
+            - type: "null"
+          default: null
+        deleted_by:
+          anyOf:
+            - type: string
+            - type: "null"
+          default: null
+
+    AggregateMemberDTO:
+      type: object
+      additionalProperties: false
+      description: Transport identity for an entity local to an aggregate.
+      properties:
+        id:
+          anyOf:
+            - type: string
+              format: uuid
+            - type: "null"
+          default: null
+
+    AggregateRootDTO:
+      type: object
+      additionalProperties: false
+      description: Transport identity for an aggregate root.
+      properties:
+        id:
+          anyOf:
+            - type: string
+              format: uuid
+            - type: "null"
+          default: null
+        semantic_namespace:
+          anyOf:
+            - type: string
+            - type: "null"
+          default: null
+        urn:
+          anyOf:
+            - type: string
+            - type: "null"
+          default: null
+
+    ThingDTO:
+      type: object
+      additionalProperties: false
+      description: Transport identity for a semantic domain entity.
+      properties:
+        id:
+          anyOf:
+            - type: string
+              format: uuid
+            - type: "null"
+          default: null
+        semantic_namespace:
+          anyOf:
+            - type: string
+            - type: "null"
+          default: null
+        urn:
+          anyOf:
+            - type: string
+            - type: "null"
+          default: null
+
+    BaseTypeDTO:
+      type: object
+      additionalProperties: false
+      description: Root DTO for the domain Type hierarchy.
+      properties: {}
+
+    TimeSeriesRecordDTO:
+      type: object
+      additionalProperties: false
+      description: Transport base for time-series observations.
+      properties: {}
+
+    LabelDTO:
+      type: string
+      maxLength: 1024
+      description: Transport representation of a label.
 
     UnitDTO:
       type: object
@@ -613,15 +720,9 @@ components:
       title: MeasurementScale
       type: string
     MetadataDTO:
-      additionalProperties: false
-      description: DTO for Metadata model with string-only values.
-      properties:
-        data:
-          additionalProperties:
-            type: string
-          description: String key-value metadata entries
-          title: Data
-          type: object
+      additionalProperties:
+        type: string
+      description: Flat transport map of metadata entries.
       title: MetadataDTO
       type: object
     ObjectValidationErrorDTO:
