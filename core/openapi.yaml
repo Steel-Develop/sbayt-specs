@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Sbayt Core Models
-  version: 0.4.0
+  version: 0.5.0
   description: Public wire contracts shared by Sbayt services.
 paths: {}
 components:
@@ -131,24 +131,8 @@ components:
     ThingDTO:
       type: object
       additionalProperties: false
-      description: Transport identity for a semantic domain entity.
-      properties:
-        id:
-          anyOf:
-            - type: string
-              format: uuid
-            - type: "null"
-          default: null
-        semantic_namespace:
-          anyOf:
-            - type: string
-            - type: "null"
-          default: null
-        urn:
-          anyOf:
-            - type: string
-            - type: "null"
-          default: null
+      description: Transport base for semantic domain concepts.
+      properties: {}
 
     BaseTypeDTO:
       type: object
